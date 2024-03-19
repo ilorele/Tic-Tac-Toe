@@ -10,17 +10,19 @@ const gameboard = (function() {
 const playerOne = (function() {
     const name = 'playerOne';
     const mark = 'x';
-    const myTurn = false;
+    const myTurn = true;
     const score = 0;
-    return {name, mark, myTurn, score}
+    const isAI = true;
+    return {name, mark, myTurn, isAI, score}
 })();
 
 const playerTwo = (function() {
     const name = 'playerTwo';
     const mark = 'o';
-    const myTurn = true;
+    const myTurn = false;
+    const isAI = true;
     const score = 0;
-    return {name, mark, myTurn, score}
+    return {name, mark, myTurn, isAI, score}
 })();
 
 function playSingleGame(player1, player2) {
@@ -55,9 +57,24 @@ function playSingleGame(player1, player2) {
 
     function playSingleTurn(player) {
 
+        // const getNewMarkPlace = function() {
+        //     const markPlaceRow = Math.floor(Math.random()*3);
+        //     const markPlaceCol = Math.floor(Math.random()*3);
+
+        //     return {player, markPlaceRow, markPlaceCol}
+        // }
+
         const getNewMarkPlace = function() {
-            const markPlaceRow = Math.floor(Math.random()*3);
-            const markPlaceCol = Math.floor(Math.random()*3);
+            let markPlaceRow;
+            let markPlaceCol;
+
+            if (player.isAI === true) {
+                markPlaceRow = Math.floor(Math.random()*3);
+                markPlaceCol = Math.floor(Math.random()*3);
+            } else {
+                markPlaceRow = +(prompt('Please enter row number [0-2]'));
+                markPlaceCol = +(prompt('Please enter column number [0-2]'));
+            }
 
             return {player, markPlaceRow, markPlaceCol}
         }
@@ -73,8 +90,12 @@ function playSingleGame(player1, player2) {
                 console.log('empty');
                 gameboard.gameboardArr[markPlace.markPlaceRow][markPlace.markPlaceCol] = player.mark;
                 placesTaken++;
+                console.table(gameboard.gameboardArr);
                 checkIfWon(markPlace, player.mark, player.name);
             } else {
+                if (player.isAI === false) {
+                    alert('This place is taken, please select another place');
+                }
                 console.log('taken');
                 markPlace = getNewMarkPlace();
                 checkIfPlaceEmpty(markPlace);
@@ -118,5 +139,14 @@ function playSingleGame(player1, player2) {
         };
     }
 }
+
+function definePlayers() {
+    const definePlayerOne = prompt("Is playerOne AI? [true/false]");
+    playerOne.isAI = definePlayerOne === 'true';
+    const definePlayerTwo = prompt("Is playerTwo AI? [true/false]");
+    playerTwo.isAI = definePlayerTwo === 'true';
+}
+
+definePlayers();
 
 playSingleGame(playerOne, playerTwo);
