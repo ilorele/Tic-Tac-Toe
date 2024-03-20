@@ -57,13 +57,6 @@ function playSingleGame(player1, player2) {
 
     function playSingleTurn(player) {
 
-        // const getNewMarkPlace = function() {
-        //     const markPlaceRow = Math.floor(Math.random()*3);
-        //     const markPlaceCol = Math.floor(Math.random()*3);
-
-        //     return {player, markPlaceRow, markPlaceCol}
-        // }
-
         const getNewMarkPlace = function() {
             let markPlaceRow;
             let markPlaceCol;
@@ -134,9 +127,54 @@ function playSingleGame(player1, player2) {
                 if (markCount === 3) {
                     console.log(`GAME WON!(COLS) ${name} WINS`);
                     gameWon = true;
+                } else {
+                    checkDiagonally();
                 }
             }
-        };
+
+            function checkDiagonally() {
+
+                if (markPlace.markPlaceRow === markPlace.markPlaceCol) {
+                    checkTopToBottom();
+                } else {
+                    checkBottomToTop();
+                }
+
+                function checkTopToBottom() {
+                    let markCount = 0;
+
+                    for (let i = 0; i < 3; i++) {
+                        
+                        if(gameboard.gameboardArr[i][i] === mark) {
+                            markCount++;
+                        }
+                    }
+
+                    if (markCount === 3) {
+                        console.log(`GAME WON (DIAGONALLY) ${name} WINS`);
+                        gameWon = true;
+                    } else {
+                        checkBottomToTop();
+                    }
+                }
+
+                function checkBottomToTop() {
+
+                    if (
+                        (markPlace.markPlaceRow === 2 && markPlace.markPlaceCol === 0) || 
+                        (markPlace.markPlaceRow === 1 && markPlace.markPlaceCol === 1) ||
+                        (markPlace.markPlaceRow === 0 && markPlace.markPlaceCol === 2)) {
+                            if (
+                                gameboard.gameboardArr[2][0] === mark && 
+                                gameboard.gameboardArr[1][1] === mark && 
+                                gameboard.gameboardArr[0][2] === mark) {
+                                    console.log(`GAME WON (DIAGONALLY) ${name} WINS`);
+                                    gameWon = true;
+                                }
+                        }
+                }
+            }
+        }
     }
 }
 
