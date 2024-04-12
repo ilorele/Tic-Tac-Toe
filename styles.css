@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+}
+
+.game-preparation-container {
+    text-align: center;
+}
+
+.player-panels-container {
+    background-color: aquamarine;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+.player-one-panel-container,
+.player-two-panel-container {
+    background-color: aqua;
+}
+
+.start-game-btn {
+    margin-top: 30px;
+}
+
+.gameboard {
+    background-color: black;
+    box-sizing: border-box;
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    gap: 3px;
+}
+
+.gameboard-cell {
+    background-color: lightblue;
+    box-sizing: border-box;
+    font-size: 110px;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
