@@ -6,6 +6,7 @@ const gameboard = (function() {
                         ];
     const startGameBtnEl = document.querySelector('.start-game-btn');
     startGameBtnEl.addEventListener('click', function() {
+        this.style.visibility = 'hidden';
         playSingleGame(playerOne, playerTwo);
     });
     const gameBoardEl = document.querySelector('.gameboard');
@@ -134,6 +135,8 @@ function playSingleGame(player1, player2) {
     }
 
     function checkIfWon(markPlace, mark, name) {
+        let endGameMsg;
+
         const checkRows = (function() {
             let markCount = 0;
 
@@ -145,8 +148,10 @@ function playSingleGame(player1, player2) {
             }
 
             if (markCount === 3) {
-                console.log(`GAME WON (ROWS)! ${name} WINS`);
+                // console.log(`GAME WON (ROWS)! ${name} WINS`);
+                endGameMsg = `GAME WON (ROWS)! ${name} WINS`;
                 gameWon = true;
+                endGame(endGameMsg);
             } else {
                 checkCols();
             }
@@ -163,8 +168,10 @@ function playSingleGame(player1, player2) {
             }
 
             if (markCount === 3) {
-                console.log(`GAME WON!(COLS) ${name} WINS`);
+                // console.log(`GAME WON!(COLS) ${name} WINS`);
+                endGameMsg = `GAME WON!(COLS) ${name} WINS`;
                 gameWon = true;
+                endGame(endGameMsg);
             } else {
                 checkDiagonally();
             }
@@ -189,8 +196,10 @@ function playSingleGame(player1, player2) {
                 }
 
                 if (markCount === 3) {
-                    console.log(`GAME WON (DIAGONALLY) ${name} WINS`);
+                    // console.log(`GAME WON (DIAGONALLY) ${name} WINS`);
+                    endGameMsg = `GAME WON (DIAGONALLY) ${name} WINS`;
                     gameWon = true;
+                    endGame(endGameMsg);  
                 } else {
                     checkBottomToTop();
                 }
@@ -206,17 +215,61 @@ function playSingleGame(player1, player2) {
                             gameboard.gameboardArr[2][0] === mark && 
                             gameboard.gameboardArr[1][1] === mark && 
                             gameboard.gameboardArr[0][2] === mark) {
-                                console.log(`GAME WON (DIAGONALLY) ${name} WINS`);
+                                // console.log(`GAME WON (DIAGONALLY) ${name} WINS`);
+                                endGameMsg = `GAME WON (DIAGONALLY) ${name} WINS`;
                                 gameWon = true;
+                                endGame(endGameMsg);
                             }
                     }
             }
         }
 
         if (placesTaken === 9 && gameWon === false) {
-            console.log('IT IS A TIE!');
+            // console.log('IT IS A TIE!');
+            endGameMsg = 'IT IS A TIE!';
+            endGame(endGameMsg);
         } else if (placesTaken < 9 && gameWon === false) {
             pickPlayer();
         }
     }
+
+    function endGame(msg) {
+        const contentContainerEl = document.querySelector('.content-container');
+        const endGameContainerEl = document.createElement('div');
+        endGameContainerEl.classList.add('end-game-container');
+        contentContainerEl.appendChild(endGameContainerEl);
+
+        const createGameMsgEl = (function() {
+            const endGameMsgEl = document.createElement('div');
+            endGameMsgEl.textContent = msg;
+            endGameContainerEl.appendChild(endGameMsgEl);
+        }());
+
+        const createPlayAgainBtnEl = (function() {
+            const playAgainBtnEl = document.createElement('button');
+            playAgainBtnEl.classList.add('play-again-btn');
+            playAgainBtnEl.textContent = 'PLAY AGAIN';
+            endGameContainerEl.appendChild(playAgainBtnEl);
+
+            playAgainBtnEl.addEventListener('click', resetGame);
+        }());
+    }
+}
+
+function resetGame() {
+    gameboard.gameboardArr = [
+                                ['', '', ''],
+                                ['', '', ''],
+                                ['', '', '']
+                            ];
+
+    const cellEls = document.querySelectorAll('.gameboard-cell');
+
+    cellEls.forEach((cell) => {
+        cell.textContent = '';
+    });
+
+    document.querySelector('.end-game-container').remove();
+
+    playSingleGame(playerOne, playerTwo);
 }

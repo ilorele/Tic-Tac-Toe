@@ -20,6 +20,7 @@ body {
 
 .start-game-btn {
     margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .gameboard {
@@ -41,4 +42,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.end-game-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.play-again-btn {
+    margin-top: 30px;
+    background-color: aquamarine;
 }
