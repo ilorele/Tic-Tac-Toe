@@ -1,5 +1,8 @@
+
+
 body {
     margin: 0;
+    font-size: 1.5rem;
 }
 
 .game-preparation-container {
@@ -7,7 +10,8 @@ body {
 }
 
 .player-panels-container {
-    background-color: aquamarine;
+    height: 130px;
+    background-color: hsl(148, 100%, 85%);
     display: flex;
     justify-content: center;
     gap: 50px;
@@ -15,12 +19,38 @@ body {
 
 .player-one-panel-container,
 .player-two-panel-container {
-    background-color: aqua;
+    width: 150px;
+    padding: 10px;
+    background-color: hsl(305, 23%, 57%);
+}
+
+.name {
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.player1-is-AI-btn,
+.player2-is-AI-btn {
+    font-size: 1rem;
+    width: 80%;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.player1-is-AI-btn:hover,
+.player2-is-AI-btn:hover {
+    background-color: lightgrey;
 }
 
 .start-game-btn {
     margin-top: 30px;
     margin-bottom: 30px;
+    background-color: hsl(175, 29%, 77%);
+}
+
+.start-game-btn:hover {
+    background-color: hsl(175, 29%, 70%);
+
 }
 
 .gameboard {
@@ -35,7 +65,7 @@ body {
 }
 
 .gameboard-cell {
-    background-color: lightblue;
+    background-color: hsl(159, 90%, 92%);
     box-sizing: border-box;
     font-size: 110px;
     font-family: 'Courier New', Courier, monospace;
@@ -44,12 +74,28 @@ body {
     justify-content: center;
 }
 
-.end-game-container {
+.end-game-container,
+.players-turn-msg {
     margin-top: 30px;
     text-align: center;
 }
 
 .play-again-btn {
     margin-top: 30px;
-    background-color: aquamarine;
+    background-color: hsl(300, 17%, 68%);
+}
+
+.play-again-btn:hover {
+    background-color: hsl(300, 17%, 60%);
+}
+
+.start-game-btn,
+.play-again-btn {
+    padding: 10px;
+    font-size: 1.5rem;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
 }

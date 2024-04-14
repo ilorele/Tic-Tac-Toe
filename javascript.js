@@ -28,31 +28,33 @@ function createGameboard() {
 createGameboard();
 
 const playerOne = (function() {
-    const name = 'playerOne';
+    const name = 'Player One';
     const mark = 'x';
     const myTurn = true;
     const score = 0;
     const isAI = true;
+    const scoreEl = document.querySelector(".player1-score");
     const isAIBtnEl = document.querySelector('.player1-is-AI-btn');
     const defineIfAI = isAIBtnEl.addEventListener('click', function() {
         definePlayer(playerOne);
     });
 
-    return {name, mark, myTurn, isAI, isAIBtnEl, defineIfAI, score}
+    return {name, mark, myTurn, isAI, scoreEl, isAIBtnEl, defineIfAI, score}
 })();
 
 const playerTwo = (function() {
-    const name = 'playerTwo';
+    const name = 'Player Two';
     const mark = 'o';
     const myTurn = false;
     const score = 0;
     const isAI = true;
+    const scoreEl = document.querySelector(".player2-score");
     const isAIBtnEl = document.querySelector('.player2-is-AI-btn');
     const defineIfAI = isAIBtnEl.addEventListener('click', function() {
         definePlayer(playerTwo);
     });
 
-    return {name, mark, myTurn, isAI, isAIBtnEl, defineIfAI, score}
+    return {name, mark, myTurn, isAI, scoreEl, isAIBtnEl, defineIfAI, score}
 })();
 
 
@@ -76,12 +78,22 @@ function playSingleGame(player1, player2) {
         if (player1.myTurn === true) {
             player1.myTurn = false;
             player2.myTurn = true;
+            createPlayersTurnMsg(player1);
             checkIfAI(player1);
         } else {
             player1.myTurn = true;
             player2.myTurn = false;
+            createPlayersTurnMsg(player2);
             checkIfAI(player2);
         }
+    }
+
+    function createPlayersTurnMsg(player) {
+        
+        const playersTurnMsg = document.createElement('div');
+        playersTurnMsg.classList.add('players-turn-msg')
+        playersTurnMsg.textContent = `${player.name}'s move`;
+        document.querySelector('.content-container').appendChild(playersTurnMsg)
     }
 
     function checkIfAI(player) {
@@ -89,7 +101,6 @@ function playSingleGame(player1, player2) {
 
         if (player.isAI === true) {
             newMarkPlace = getComputersMarkPlace(player);
-            console.log(player.name + ' is AI');
 
             checkIfPlaceEmpty(newMarkPlace, player);
             
@@ -99,8 +110,6 @@ function playSingleGame(player1, player2) {
                 const markPlaceCol = +e.target.id.charAt(1);
 
                 newMarkPlace = {player, markPlaceRow, markPlaceCol}
-
-                console.log(player.name + ' is human');
 
                 gameboard.gameBoardEl.removeEventListener('click', getUsersMarkPlace);
 
@@ -121,20 +130,22 @@ function playSingleGame(player1, player2) {
     function checkIfPlaceEmpty(markPlace, player) {
 
         if (gameboard.gameboardArr[markPlace.markPlaceRow][markPlace.markPlaceCol] === '') {
-            console.log('empty');
             gameboard.gameboardArr[markPlace.markPlaceRow][markPlace.markPlaceCol] = player.mark;
             const cellEl = document.getElementById(`${markPlace.markPlaceRow}${markPlace.markPlaceCol}`);
             cellEl.textContent = player.mark;
+            resetPlayersTurnMsg();
             placesTaken++;
-            console.table(gameboard.gameboardArr);
-            checkIfWon(markPlace, player.mark, player.name);
+            checkIfWon(markPlace, player.mark, player.name, player);
         } else {
-            console.log('taken');
             checkIfAI(player);
         }
     }
 
-    function checkIfWon(markPlace, mark, name) {
+    function resetPlayersTurnMsg() {
+        document.querySelector('.players-turn-msg').remove();
+    }
+
+    function checkIfWon(markPlace, mark, name, player) {
         let endGameMsg;
 
         const checkRows = (function() {
@@ -148,10 +159,9 @@ function playSingleGame(player1, player2) {
             }
 
             if (markCount === 3) {
-                // console.log(`GAME WON (ROWS)! ${name} WINS`);
                 endGameMsg = `GAME WON (ROWS)! ${name} WINS`;
                 gameWon = true;
-                endGame(endGameMsg);
+                endGame(endGameMsg, player);
             } else {
                 checkCols();
             }
@@ -168,10 +178,9 @@ function playSingleGame(player1, player2) {
             }
 
             if (markCount === 3) {
-                // console.log(`GAME WON!(COLS) ${name} WINS`);
                 endGameMsg = `GAME WON!(COLS) ${name} WINS`;
                 gameWon = true;
-                endGame(endGameMsg);
+                endGame(endGameMsg, player);
             } else {
                 checkDiagonally();
             }
@@ -196,10 +205,9 @@ function playSingleGame(player1, player2) {
                 }
 
                 if (markCount === 3) {
-                    // console.log(`GAME WON (DIAGONALLY) ${name} WINS`);
                     endGameMsg = `GAME WON (DIAGONALLY) ${name} WINS`;
                     gameWon = true;
-                    endGame(endGameMsg);  
+                    endGame(endGameMsg, player);  
                 } else {
                     checkBottomToTop();
                 }
@@ -215,29 +223,32 @@ function playSingleGame(player1, player2) {
                             gameboard.gameboardArr[2][0] === mark && 
                             gameboard.gameboardArr[1][1] === mark && 
                             gameboard.gameboardArr[0][2] === mark) {
-                                // console.log(`GAME WON (DIAGONALLY) ${name} WINS`);
                                 endGameMsg = `GAME WON (DIAGONALLY) ${name} WINS`;
                                 gameWon = true;
-                                endGame(endGameMsg);
+                                endGame(endGameMsg, player);
                             }
                     }
             }
         }
 
         if (placesTaken === 9 && gameWon === false) {
-            // console.log('IT IS A TIE!');
             endGameMsg = 'IT IS A TIE!';
-            endGame(endGameMsg);
+            endGame(endGameMsg, 0);
         } else if (placesTaken < 9 && gameWon === false) {
             pickPlayer();
         }
     }
 
-    function endGame(msg) {
+    function endGame(msg, winner) {
         const contentContainerEl = document.querySelector('.content-container');
         const endGameContainerEl = document.createElement('div');
         endGameContainerEl.classList.add('end-game-container');
         contentContainerEl.appendChild(endGameContainerEl);
+
+        if (gameWon === true) {
+            winner.score++
+            winner.scoreEl.textContent = 'score: ' + winner.score;
+        }
 
         const createGameMsgEl = (function() {
             const endGameMsgEl = document.createElement('div');
